@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace IngeniozIT\Cache\Tests;
 
-use DateInterval;
-use DateTimeImmutable;
-use IngeniozIT\Clock\FrozenClock;
 use PHPUnit\Framework\TestCase;
+use IngeniozIT\Clock\{SystemClock, FrozenClock};
 use IngeniozIT\Cache\CacheItem;
-use IngeniozIT\Clock\SystemClock;
 use Psr\Cache\CacheItemInterface;
 use Psr\Clock\ClockInterface;
+use DateTimeImmutable;
+use DateInterval;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)

@@ -8,8 +8,8 @@ use Psr\Cache\{CacheItemPoolInterface, CacheItemInterface};
 use Psr\Clock\ClockInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use DateTimeImmutable;
 use FilesystemIterator;
+use DateTimeImmutable;
 
 final class FileCacheItemPool implements CacheItemPoolInterface
 {

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace IngeniozIT\Cache;
 
-use DateInterval;
-use DateTimeInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Clock\ClockInterface;
+use DateTimeInterface;
+use DateInterval;
 
 class CacheItem implements CacheItemInterface
 {

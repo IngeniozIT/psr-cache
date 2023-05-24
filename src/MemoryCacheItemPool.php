@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace IngeniozIT\Cache;
 
-use DateTimeImmutable;
 use Psr\Cache\{CacheItemPoolInterface, CacheItemInterface};
 use Psr\Clock\ClockInterface;
+use DateTimeImmutable;
 
 final class MemoryCacheItemPool implements CacheItemPoolInterface
 {
