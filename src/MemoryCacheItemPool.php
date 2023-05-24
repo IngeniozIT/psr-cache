@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use Psr\Cache\{CacheItemPoolInterface, CacheItemInterface};
 use Psr\Clock\ClockInterface;
 
-class MemoryCacheItemPool implements CacheItemPoolInterface
+final class MemoryCacheItemPool implements CacheItemPoolInterface
 {
     /** @var array<string, CacheItemInterface> */
     private array $items = [];
@@ -20,28 +20,7 @@ class MemoryCacheItemPool implements CacheItemPoolInterface
     ) {
     }
 
-    public function save(CacheItemInterface $item): bool
-    {
-        $this->items[$item->getKey()] = $item;
-
-        return true;
-    }
-
-    /**
-     * @param string $key
-     */
-    public function hasItem($key): bool
-    {
-        if (!is_string($key)) {
-            throw new InvalidArgumentException('Key must be a string');
-        }
-        return isset($this->items[$key]);
-    }
-
-    /**
-     * @param string $key
-     */
-    public function getItem($key): CacheItemInterface
+    public function getItem(string $key): CacheItemInterface
     {
         return $this->hasItem($key) ?
             $this->items[$key] :
@@ -61,6 +40,14 @@ class MemoryCacheItemPool implements CacheItemPoolInterface
         return $items;
     }
 
+    public function hasItem(string $key): bool
+    {
+        if (empty($key)) {
+            throw new InvalidArgumentException('Key must be a string');
+        }
+        return isset($this->items[$key]);
+    }
+
     public function clear(): bool
     {
         $this->items = [];
@@ -68,10 +55,7 @@ class MemoryCacheItemPool implements CacheItemPoolInterface
         return true;
     }
 
-    /**
-     * @param string $key
-     */
-    public function deleteItem($key): bool
+    public function deleteItem(string $key): bool
     {
         if ($this->hasItem($key)) {
             unset($this->items[$key]);
@@ -92,9 +76,19 @@ class MemoryCacheItemPool implements CacheItemPoolInterface
         return true;
     }
 
-    public function saveDeferred(CacheItemInterface $item1): bool
+    public function save(CacheItemInterface $item): bool
     {
-        $this->deferred[$item1->getKey()] = $item1;
+        if (!$item->isHit()) {
+            return false;
+        }
+
+        $this->items[$item->getKey()] = $item;
+        return true;
+    }
+
+    public function saveDeferred(CacheItemInterface $item): bool
+    {
+        $this->deferred[$item->getKey()] = $item;
 
         return true;
     }
