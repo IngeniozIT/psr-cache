@@ -110,13 +110,13 @@ abstract class CacheItemPoolTestAbstract extends TestCase
             clock: new SystemClock(),
         );
         $item2 = new CacheItem(
-            key: 'item/Key',
+            key: 'itemKey',
             value: 'value2',
             expirationDate: null,
             clock: new SystemClock(),
         );
         $item3 = new CacheItem(
-            key: 'item2/Key',
+            key: 'item2Key',
             value: 'value3',
             expirationDate: null,
             clock: new SystemClock(),
@@ -127,8 +127,8 @@ abstract class CacheItemPoolTestAbstract extends TestCase
         $pool->save($item3);
         $cleared = $pool->clear();
         $hasItem1 = $pool->hasItem('itemKey1');
-        $hasItem2 = $pool->hasItem('item/Key');
-        $hasItem3 = $pool->hasItem('item2/Key3');
+        $hasItem2 = $pool->hasItem('itemKey');
+        $hasItem3 = $pool->hasItem('item2Key3');
 
         self::assertTrue($cleared);
         self::assertFalse($hasItem1);

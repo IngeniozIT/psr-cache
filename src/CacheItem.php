@@ -17,6 +17,9 @@ final class CacheItem implements CacheItemInterface
         private ?DateTimeInterface $expirationDate,
         private readonly ClockInterface $clock,
     ) {
+        if (strpbrk($key, '{}()/\\@:') !== false) {
+            throw new InvalidArgumentException("Invalid key: {$key}");
+        }
     }
 
     public function getKey(): string

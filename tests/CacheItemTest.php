@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IngeniozIT\Cache\Tests;
 
+use IngeniozIT\Cache\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use IngeniozIT\Clock\{SystemClock, FrozenClock};
 use IngeniozIT\Cache\CacheItem;
@@ -44,6 +45,40 @@ class CacheItemTest extends TestCase
         $key = $item->getKey();
 
         $this->assertEquals('itemKey', $key);
+    }
+
+    /**
+     * @dataProvider provideInvalidKeys
+     * @phan-suppress PhanNoopNew
+     */
+    public function testKeyCannotContainReservedCharacters(string $key): void
+    {
+        $clock = $this->getClock();
+
+        $this->expectException(InvalidArgumentException::class);
+        new CacheItem(
+            key: $key,
+            value: null,
+            expirationDate: null,
+            clock: $clock,
+        );
+    }
+
+    /**
+     * @return array<string, array<string>>
+     */
+    public static function provideInvalidKeys(): array
+    {
+        return [
+            '{' => ['{'],
+            '}' => ['}'],
+            '(' => ['('],
+            ')' => [')'],
+            '/' => ['/'],
+            '\\' => ['\\'],
+            '@' => ['@'],
+            ':' => [':'],
+        ];
     }
 
     public function testHasAValue(): void

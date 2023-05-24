@@ -6,9 +6,6 @@ namespace IngeniozIT\Cache;
 
 use Psr\Cache\{CacheItemPoolInterface, CacheItemInterface};
 use Psr\Clock\ClockInterface;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use FilesystemIterator;
 use DateTimeImmutable;
 
 final class FileCacheItemPool implements CacheItemPoolInterface
@@ -68,24 +65,11 @@ final class FileCacheItemPool implements CacheItemPoolInterface
 
     public function clear(): bool
     {
-        $this->removeDir($this->directory);
+        foreach (glob($this->directory . '/*.cache') ?: [] as $file) {
+            unlink($file);
+        }
 
         return true;
-    }
-
-    private function removeDir(string $target): void
-    {
-        $dir = new RecursiveDirectoryIterator($target, FilesystemIterator::SKIP_DOTS);
-        $dir = new RecursiveIteratorIterator($dir, RecursiveIteratorIterator::CHILD_FIRST);
-
-        /** @var \SplFileInfo $file */
-        foreach ($dir as $file) {
-            if ($file->isDir()) {
-                rmdir($file->getPathname());
-                continue;
-            }
-            unlink($file->getPathname());
-        }
     }
 
     public function deleteItem(string $key): bool
@@ -104,10 +88,7 @@ final class FileCacheItemPool implements CacheItemPoolInterface
 
     public function save(CacheItemInterface $item): bool
     {
-        $dirname = dirname($this->getFilePath($item->getKey()));
-        return $item->isHit() &&
-            (is_dir($dirname) || mkdir(directory: $dirname, recursive: true)) &&
-            file_put_contents($this->getFilePath($item->getKey()), serialize($item));
+        return $item->isHit() && file_put_contents($this->getFilePath($item->getKey()), serialize($item));
     }
 
     public function saveDeferred(CacheItemInterface $item): bool

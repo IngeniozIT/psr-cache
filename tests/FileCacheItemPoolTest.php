@@ -20,7 +20,7 @@ class FileCacheItemPoolTest extends CacheItemPoolTestAbstract
 
     public function setUp(): void
     {
-        $this->cacheDir = __DIR__ . '/../tmp/tests/FileCacheItemPool' . uniqid();
+        $this->cacheDir = __DIR__ . '/../tmp/tests/FileCacheItemPool/' . uniqid();
     }
 
     public function tearDown(): void
@@ -34,10 +34,6 @@ class FileCacheItemPoolTest extends CacheItemPoolTestAbstract
 
         /** @var \SplFileInfo $file */
         foreach ($dir as $file) {
-            if ($file->isDir()) {
-                rmdir($file->getPathname());
-                continue;
-            }
             unlink($file->getPathname());
         }
         rmdir($this->cacheDir);
@@ -61,7 +57,7 @@ class FileCacheItemPoolTest extends CacheItemPoolTestAbstract
     {
         $pool = $this->getPool();
         $item = new CacheItem(
-            key: 'item/Key',
+            key: 'itemKey',
             value: 'value',
             expirationDate: null,
             clock: new SystemClock(),
@@ -70,15 +66,14 @@ class FileCacheItemPoolTest extends CacheItemPoolTestAbstract
         $pool->save($item);
 
         self::assertTrue(is_dir($this->cacheDir));
-        self::assertTrue(is_dir($this->cacheDir . '/item/'));
-        self::assertTrue(file_exists($this->cacheDir . '/item/Key.cache'));
+        self::assertTrue(file_exists($this->cacheDir . '/itemKey.cache'));
     }
 
     public function testCleansUpFileSystemOnClear(): void
     {
         $pool = $this->getPool();
         $item = new CacheItem(
-            key: 'item/Key',
+            key: 'itemKey',
             value: 'value',
             expirationDate: null,
             clock: new SystemClock(),
@@ -88,7 +83,6 @@ class FileCacheItemPoolTest extends CacheItemPoolTestAbstract
         $pool->clear();
 
         self::assertTrue(is_dir($this->cacheDir));
-        self::assertFalse(is_dir($this->cacheDir . '/item/'));
-        self::assertFalse(file_exists($this->cacheDir . '/item/Key.cache'));
+        self::assertFalse(file_exists($this->cacheDir . '/itemKey.cache'));
     }
 }
