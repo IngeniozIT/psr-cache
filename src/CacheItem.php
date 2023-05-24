@@ -9,7 +9,7 @@ use Psr\Clock\ClockInterface;
 use DateTimeInterface;
 use DateInterval;
 
-class CacheItem implements CacheItemInterface
+final class CacheItem implements CacheItemInterface
 {
     public function __construct(
         private readonly string $key,
