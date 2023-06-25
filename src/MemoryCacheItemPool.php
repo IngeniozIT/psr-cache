@@ -40,12 +40,13 @@ final class MemoryCacheItemPool implements CacheItemPoolInterface
         return $items;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function hasItem(string $key): bool
     {
-        if (empty($key)) {
-            throw new InvalidArgumentException('Key must be a string');
-        }
-        return isset($this->items[$key]);
+        CacheItem::validateKey($key);
+        return isset($this->items[$key]) && $this->items[$key]->isHit();
     }
 
     public function clear(): bool
@@ -59,9 +60,10 @@ final class MemoryCacheItemPool implements CacheItemPoolInterface
     {
         if ($this->hasItem($key)) {
             unset($this->items[$key]);
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**

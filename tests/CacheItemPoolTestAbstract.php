@@ -219,4 +219,49 @@ abstract class CacheItemPoolTestAbstract extends TestCase
         self::assertFalse($saved);
         self::assertFalse($hasItem1);
     }
+
+    /**
+     * @dataProvider invalidKeysScenariosProvider
+     */
+    public function testCannotUseInvalidKeys(callable $scenario): void
+    {
+        $cache = $this->getPool();
+
+        $this->expectException(InvalidArgumentException::class);
+        $scenario($cache);
+    }
+
+    /**
+     * @return array<string, array{0: callable}>
+     */
+    public static function invalidKeysScenariosProvider(): array
+    {
+        return [
+            'getItem' => [
+                function (CacheItemPoolInterface $cache) {
+                    $cache->getItem('{invalidKey}');
+                },
+            ],
+            'getItems' => [
+                function (CacheItemPoolInterface $cache) {
+                    $cache->getItems(['{invalidKey}']);
+                },
+            ],
+            'hasItem' => [
+                function (CacheItemPoolInterface $cache) {
+                    $cache->hasItem('{invalidKey}');
+                },
+            ],
+            'deleteItem' => [
+                function (CacheItemPoolInterface $cache) {
+                    $cache->deleteItem('{invalidKey}');
+                },
+            ],
+            'deleteItems' => [
+                function (CacheItemPoolInterface $cache) {
+                    $cache->deleteItems(['{invalidKey}']);
+                },
+            ],
+        ];
+    }
 }

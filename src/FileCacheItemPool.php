@@ -55,11 +55,12 @@ final class FileCacheItemPool implements CacheItemPoolInterface
         return $items;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function hasItem(string $key): bool
     {
-        if (empty($key)) {
-            throw new InvalidArgumentException('Key must be a string');
-        }
+        CacheItem::validateKey($key);
         return file_exists($this->getFilePath($key));
     }
 

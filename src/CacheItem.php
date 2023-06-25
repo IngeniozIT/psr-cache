@@ -17,8 +17,16 @@ final class CacheItem implements CacheItemInterface
         private ?DateTimeInterface $expirationDate,
         private readonly ClockInterface $clock,
     ) {
+        self::validateKey($key);
+    }
+
+    public static function validateKey(string $key): void
+    {
+        if (empty($key)) {
+            throw new InvalidArgumentException('Key must not be empty');
+        }
         if (strpbrk($key, '{}()/\\@:') !== false) {
-            throw new InvalidArgumentException("Invalid key: {$key}");
+            throw new InvalidArgumentException("Invalid key: $key");
         }
     }
 

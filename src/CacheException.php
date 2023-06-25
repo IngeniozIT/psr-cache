@@ -6,7 +6,8 @@ namespace IngeniozIT\Cache;
 
 use Exception;
 use Psr\Cache\CacheException as PsrCacheException;
+use Psr\SimpleCache\CacheException as PsrSimpleCacheException;
 
-class CacheException extends Exception implements PsrCacheException
+class CacheException extends Exception implements PsrCacheException, PsrSimpleCacheException
 {
 }

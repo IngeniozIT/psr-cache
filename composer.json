@@ -15,7 +15,8 @@
     "require": {
         "php": ">=8.2",
         "ingenioz-it/clock": "^1.0",
-        "psr/cache": "^3.0"
+        "psr/cache": "^3.0",
+        "psr/simple-cache": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
