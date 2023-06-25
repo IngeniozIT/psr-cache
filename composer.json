@@ -12,6 +12,10 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "provide": {
+        "psr/cache-implementation": "3.0",
+        "psr/simple-cache-implementation": "3.0"
+    },
     "require": {
         "php": ">=8.2",
         "ingenioz-it/clock": "^1.0",
